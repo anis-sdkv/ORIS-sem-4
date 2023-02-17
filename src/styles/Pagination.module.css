@@ -1,0 +1,37 @@
+.pagination_block {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 40px;
+}
+
+.page_btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  padding: 20px 20px;
+  min-width: 40px;
+  height: 40px;
+  font: inherit;
+  color: #333f2d;
+  font-size: 20px;
+  font-weight: 600;
+  background-color: white;
+  border: solid 2px #333f2d;
+  border-radius: 20px;
+}
+
+.page_btn:hover {
+  background-color: #d8d8d8;
+}
+
+.page_btn_current {
+  cursor: default;
+  background-color: #333f2d;
+  color: white;
+}
+
+.page_btn_current:hover {
+  background-color: #333f2d;
+}

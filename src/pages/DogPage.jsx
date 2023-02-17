@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import DogsService from "../API/DogsService";
+import DogInfoCard from "../components/DogInfoCard";
 import { useFetching } from "../hooks/useFetching";
 
 const DogPage = () => {
@@ -11,7 +12,12 @@ const DogPage = () => {
   const [fetchDog, isLoading, fetchError] = useFetching(async () => {
     console.log("fetching...");
     const response = await DogsService.getById(id);
-    setDog(await response.json());
+    const res = await response.json();
+    if (Object.keys(res).length !== 0) {
+      const dogImage = await (await DogsService.getImage(id)).json();
+      res["image"] = dogImage[0];
+    }
+    setDog(res);
   });
 
   const trySetDog = async () => {
@@ -22,21 +28,19 @@ const DogPage = () => {
 
   useEffect(() => {
     trySetDog();
-    return () => {};
   }, []);
 
-  return (
-    <div>
-      {isLoading || dog == null ? (
-        <p>Dogs is loading... </p>
-      ) : (
+  const tryRender = () => {
+    if (!dog || Object.keys(dog).length === 0) {
+      return (
         <div>
-          <p>{dog.name}</p>
-          <p>{dog.bred_for}</p>
+          An error has occurred, perhaps a dog with this id does not exist.
         </div>
-      )}
-    </div>
-  );
+      );
+    } else return <DogInfoCard dog={dog} />;
+  };
+
+  return isLoading ? <div>loading...</div> : tryRender();
 };
 
 export default DogPage;

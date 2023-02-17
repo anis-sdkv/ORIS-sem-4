@@ -5,13 +5,14 @@ import DogCard from "../components/DogCard";
 import DogsService from "../API/DogsService";
 import { useFetching } from "../hooks/useFetching";
 import { getPageCount } from "../utils/pages";
-import Pagination from "../components/UI/Pagination";
+import Pagination from "../components/Pagination";
+import DogsContainer from "../containers/DogsContainer";
 
 function Dogs() {
   const [dogs, setDogs] = useState([]);
   const [dogsError, setDogsError] = useState("");
   const [totalPages, setTotalPages] = useState(0);
-  const [limit, setLimit] = useState(10);
+  const [limit, setLimit] = useState(12);
   const [page, setPage] = useState(0);
 
   const [fetchDogs, isLoading, fetchError] = useFetching(async () => {
@@ -30,17 +31,29 @@ function Dogs() {
     fetchDogs();
   }, [page]);
 
+  const pageNumberStyle = {
+    marginBottom: "20px",
+    marginLeft: "20px",
+    fontWeight: "700",
+    fontSize: "24px",
+  };
+
   return (
     <div>
       {dogsError && <p>Error: {dogsError}</p>}
       {isLoading ? (
         <p>Dogs is loading...</p>
       ) : (
-        dogs.map((dog) => {
-          return <DogCard dog={dog} key={dog.id}></DogCard>;
-        })
+        <div>
+          <div style={pageNumberStyle}>Page {page + 1}</div>
+          <DogsContainer dogs={dogs} />
+        </div>
       )}
-      <Pagination totalPages={totalPages} setPage={setPage} />
+      <Pagination
+        currentPage={page}
+        totalPages={totalPages}
+        setPage={setPage}
+      />
     </div>
   );
 }
